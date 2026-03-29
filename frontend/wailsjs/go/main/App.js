@@ -10,6 +10,10 @@ export function DeleteTodo(arg1) {
   return window['go']['main']['App']['DeleteTodo'](arg1);
 }
 
+export function GetCodeFolders() {
+  return window['go']['main']['App']['GetCodeFolders']();
+}
+
 export function GetConfigDir() {
   return window['go']['main']['App']['GetConfigDir']();
 }
@@ -22,6 +26,26 @@ export function LoadBookmarks() {
   return window['go']['main']['App']['LoadBookmarks']();
 }
 
+export function LoadCodeTemplates() {
+  return window['go']['main']['App']['LoadCodeTemplates']();
+}
+
+export function OpenWithDefaultApp(arg1) {
+  return window['go']['main']['App']['OpenWithDefaultApp'](arg1);
+}
+
+export function ReadFileContent(arg1) {
+  return window['go']['main']['App']['ReadFileContent'](arg1);
+}
+
 export function SaveBookmarks(arg1) {
   return window['go']['main']['App']['SaveBookmarks'](arg1);
+}
+
+export function SaveCodeTemplates(arg1) {
+  return window['go']['main']['App']['SaveCodeTemplates'](arg1);
+}
+
+export function SelectCodeFile() {
+  return window['go']['main']['App']['SelectCodeFile']();
 }

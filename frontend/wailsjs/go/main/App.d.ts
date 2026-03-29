@@ -6,10 +6,22 @@ export function AddTodo(arg1:main.Todo):Promise<void>;
 
 export function DeleteTodo(arg1:string):Promise<void>;
 
+export function GetCodeFolders():Promise<Array<main.CodeFolder>>;
+
 export function GetConfigDir():Promise<string>;
 
 export function GetTodos():Promise<Array<main.Todo>>;
 
 export function LoadBookmarks():Promise<string>;
 
+export function LoadCodeTemplates():Promise<string>;
+
+export function OpenWithDefaultApp(arg1:string):Promise<void>;
+
+export function ReadFileContent(arg1:string):Promise<string>;
+
 export function SaveBookmarks(arg1:string):Promise<void>;
+
+export function SaveCodeTemplates(arg1:string):Promise<void>;
+
+export function SelectCodeFile():Promise<string>;

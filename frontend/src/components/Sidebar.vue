@@ -14,7 +14,8 @@ const emit = defineEmits<{
 const collapsed = ref(false)
 
 const modules = [
-  { id: 'bookmarks', name: '收藏夹', icon: 'mdi-folder-star' }
+  { id: 'todos', name: '待办事项', icon: 'mdi-checkbox-marked-outline' },
+  { id: 'codeTemplates', name: '代码模板', icon: 'mdi-code-tags' }
 ]
 
 const selectModule = (id: string) => {

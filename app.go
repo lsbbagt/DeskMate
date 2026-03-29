@@ -4,7 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
+
+	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // Todo structure
@@ -17,16 +21,33 @@ type Todo struct {
 	CreatedAt   string `json:"createdAt"`
 }
 
+// CodeFile structure
+type CodeFile struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Path string `json:"path"`
+	Type string `json:"type"`
+}
+
+// CodeFolder structure
+type CodeFolder struct {
+	ID    string     `json:"id"`
+	Name  string     `json:"name"`
+	Files []CodeFile `json:"files"`
+}
+
 // App struct
 type App struct {
-	ctx   context.Context
-	todos []Todo
+	ctx          context.Context
+	todos        []Todo
+	codeFolders  []CodeFolder
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{
-		todos: make([]Todo, 0),
+		todos:       make([]Todo, 0),
+		codeFolders: make([]CodeFolder, 0),
 	}
 }
 
@@ -35,6 +56,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.loadTodosFromFile()
+	a.loadCodeTemplatesFromFile()
 }
 
 // GetConfigDir returns the config directory path
@@ -122,4 +144,84 @@ func (a *App) loadTodosFromFile() error {
 	}
 
 	return json.Unmarshal(data, &a.todos)
+}
+
+// Code Template APIs
+
+// GetCodeFolders returns all code folders
+func (a *App) GetCodeFolders() []CodeFolder {
+	return a.codeFolders
+}
+
+// SaveCodeTemplates saves code templates to file
+func (a *App) SaveCodeTemplates(jsonData string) error {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "codeTemplates.json")
+	return os.WriteFile(filePath, []byte(jsonData), 0644)
+}
+
+// LoadCodeTemplates loads code templates from file
+func (a *App) LoadCodeTemplates() (string, error) {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "codeTemplates.json")
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// Return empty array if file doesn't exist
+		return "[]", nil
+	}
+
+	return string(data), nil
+}
+
+// ReadFileContent reads file content
+func (a *App) ReadFileContent(filePath string) (string, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// OpenWithDefaultApp opens file with default application
+func (a *App) OpenWithDefaultApp(filePath string) error {
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "start", "", filePath)
+	case "darwin":
+		cmd = exec.Command("open", filePath)
+	default: // linux
+		cmd = exec.Command("xdg-open", filePath)
+	}
+
+	return cmd.Start()
+}
+
+// SelectCodeFile opens file dialog for selecting code files
+func (a *App) SelectCodeFile() (string, error) {
+	filePath, err := wailsRuntime.OpenFileDialog(a.ctx, wailsRuntime.OpenDialogOptions{
+		Title: "选择代码文件",
+		Filters: []wailsRuntime.FileFilter{
+			{DisplayName: "代码文件", Pattern: "*.py;*.r;*.R;*.exe;*.js;*.ts;*.java;*.cpp;*.c;*.go"},
+			{DisplayName: "所有文件", Pattern: "*.*"},
+		},
+	})
+	return filePath, err
+}
+
+// loadCodeTemplatesFromFile loads code templates from file
+func (a *App) loadCodeTemplatesFromFile() error {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "codeTemplates.json")
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// File doesn't exist, initialize empty
+		a.codeFolders = make([]CodeFolder, 0)
+		return nil
+	}
+
+	return json.Unmarshal(data, &a.codeFolders)
 }

@@ -3,11 +3,12 @@ import { ref } from 'vue'
 import TitleBar from './components/TitleBar.vue'
 import Sidebar from './components/Sidebar.vue'
 import RightPanel from './components/RightPanel.vue'
-import BookmarksView from './views/BookmarksView.vue'
+import TodoView from './views/TodoView.vue'
+import CodeTemplateView from './views/CodeTemplateView.vue'
 
 const sidebarVisible = ref(true)
 const rightPanelVisible = ref(true)
-const activeModule = ref('bookmarks')
+const activeModule = ref('todos')
 
 const toggleSidebar = () => {
   sidebarVisible.value = !sidebarVisible.value
@@ -34,18 +35,19 @@ const toggleRightPanel = () => {
     
     <!-- 主内容区 -->
     <v-main class="main-content">
-      <v-container fluid class="fill-height pa-0">
+      <!-- 待办事项模块 -->
+      <v-container v-if="activeModule === 'todos'" fluid class="fill-height pa-0">
         <v-row no-gutters class="fill-height">
-          <!-- 中间主面板 -->
           <v-col class="d-flex flex-column">
-            <BookmarksView />
+            <TodoView />
           </v-col>
-          
-          <!-- 右侧面板 -->
-          <RightPanel 
-            v-model="rightPanelVisible"
-          />
+          <RightPanel v-model="rightPanelVisible" />
         </v-row>
+      </v-container>
+
+      <!-- 代码模板模块 -->
+      <v-container v-else-if="activeModule === 'codeTemplates'" fluid class="fill-height pa-0">
+        <CodeTemplateView />
       </v-container>
     </v-main>
   </v-app>

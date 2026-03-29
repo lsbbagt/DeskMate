@@ -24,7 +24,7 @@ const newBookmarkOpenMode = ref<'internal' | 'external'>('internal')
 const openAddDialog = () => {
   newBookmarkName.value = ''
   newBookmarkUrl.value = ''
-  newBookmarkOpenMode.value = 'internal'
+  newBookmarkOpenMode.value = 'external'
   showAddDialog.value = true
 }
 
@@ -69,11 +69,7 @@ const deleteBookmark = async (id: string) => {
 }
 
 const openBookmark = (bookmark: Bookmark) => {
-  if (bookmark.openMode === 'external') {
-    BrowserOpenURL(bookmark.url)
-  } else {
-    bookmarksStore.setCurrentUrl(bookmark.url)
-  }
+  BrowserOpenURL(bookmark.url)
 }
 
 const openInExternal = (url: string) => {
@@ -121,25 +117,10 @@ const openInExternal = (url: string) => {
         rounded="lg"
       >
         <template #prepend>
-          <v-icon 
-            :color="bookmark.openMode === 'external' ? 'warning' : 'primary'" 
-            size="20"
-          >
-            {{ bookmark.openMode === 'external' ? 'mdi-open-in-new' : 'mdi-link' }}
-          </v-icon>
+          <v-icon color="primary" size="20">mdi-open-in-new</v-icon>
         </template>
 
-        <v-list-item-title class="d-flex align-center">
-          {{ bookmark.name }}
-          <v-chip
-            :color="bookmark.openMode === 'external' ? 'warning' : 'primary'"
-            size="x-small"
-            label
-            class="ml-2"
-          >
-            {{ bookmark.openMode === 'external' ? '外部' : '内部' }}
-          </v-chip>
-        </v-list-item-title>
+        <v-list-item-title>{{ bookmark.name }}</v-list-item-title>
         <v-list-item-subtitle class="text-caption">{{ bookmark.url }}</v-list-item-subtitle>
 
         <template #append>
@@ -196,19 +177,7 @@ const openInExternal = (url: string) => {
             density="compact"
             hide-details
             placeholder="https://example.com"
-            class="mb-3"
           />
-          <div class="text-caption text-secondary mb-2">打开方式</div>
-          <v-chip-group v-model="newBookmarkOpenMode" mandatory>
-            <v-chip value="internal" color="primary" variant="outlined">
-              <v-icon start>mdi-web</v-icon>
-              内部打开
-            </v-chip>
-            <v-chip value="external" color="warning" variant="outlined">
-              <v-icon start>mdi-open-in-new</v-icon>
-              外部浏览器
-            </v-chip>
-          </v-chip-group>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -251,19 +220,7 @@ const openInExternal = (url: string) => {
             variant="outlined"
             density="compact"
             hide-details
-            class="mb-3"
           />
-          <div class="text-caption text-secondary mb-2">打开方式</div>
-          <v-chip-group v-model="editingBookmark.openMode" mandatory>
-            <v-chip value="internal" color="primary" variant="outlined">
-              <v-icon start>mdi-web</v-icon>
-              内部打开
-            </v-chip>
-            <v-chip value="external" color="warning" variant="outlined">
-              <v-icon start>mdi-open-in-new</v-icon>
-              外部浏览器
-            </v-chip>
-          </v-chip-group>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
