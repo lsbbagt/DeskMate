@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useBookmarksStore } from '../stores/bookmarks'
+import { BrowserOpenURL } from '../../wailsjs/runtime/runtime'
 
 const bookmarksStore = useBookmarksStore()
 
@@ -9,6 +10,50 @@ const currentUrl = computed(() => bookmarksStore.currentUrl)
 const goToHome = () => {
   bookmarksStore.setCurrentUrl('about:blank')
 }
+
+// 检查URL是否可以在iframe中打开
+const canOpenInIframe = (url: string) => {
+  // 这些网站通常不允许在iframe中打开
+  const blockedDomains = [
+    'github.com',
+    'stackoverflow.com',
+    'google.com',
+    'youtube.com',
+    'facebook.com',
+    'twitter.com',
+    'linkedin.com',
+    'kaggle.com'
+  ]
+  
+  try {
+    const hostname = new URL(url).hostname
+    return !blockedDomains.some(domain => hostname.includes(domain))
+  } catch {
+    return false
+  }
+}
+
+// 打开URL
+const openUrl = (url: string) => {
+  if (canOpenInIframe(url)) {
+    bookmarksStore.setCurrentUrl(url)
+  } else {
+    // 使用外部浏览器打开
+    BrowserOpenURL(url)
+  }
+}
+
+// 监听store中的URL变化
+bookmarksStore.$onAction(({ name, after }) => {
+  if (name === 'setCurrentUrl') {
+    after((url) => {
+      if (url && url !== 'about:blank' && !canOpenInIframe(url)) {
+        BrowserOpenURL(url)
+        bookmarksStore.setCurrentUrl('about:blank')
+      }
+    })
+  }
+})
 </script>
 
 <template>
@@ -43,7 +88,7 @@ const goToHome = () => {
         v-if="currentUrl && currentUrl !== 'about:blank'"
         :src="currentUrl"
         class="browser-frame"
-        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
       />
       
       <!-- 空白页 -->
@@ -53,6 +98,9 @@ const goToHome = () => {
           <div class="text-h6 mt-4 mb-2">欢迎使用StatBox</div>
           <div class="text-body-2 text-secondary">
             从右侧选择收藏，或点击左上角菜单添加新收藏
+          </div>
+          <div class="text-caption mt-4 text-secondary">
+            注：部分网站（如GitHub）将在外部浏览器中打开
           </div>
         </v-card>
       </div>
