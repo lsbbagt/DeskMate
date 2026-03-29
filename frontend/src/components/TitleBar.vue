@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { WindowMinimise, WindowToggleMaximise, WindowClose } from '../../wailsjs/runtime/runtime'
+import { WindowMinimise, WindowToggleMaximise, Quit } from '../../wailsjs/runtime/runtime'
 
 const emit = defineEmits<{
   (e: 'toggle-sidebar'): void
@@ -15,7 +15,7 @@ const maximize = () => {
 }
 
 const close = () => {
-  WindowClose()
+  Quit()
 }
 </script>
 
