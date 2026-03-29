@@ -19,13 +19,13 @@ const toggleRightPanel = () => {
 </script>
 
 <template>
+  <!-- 自定义标题栏 - 放在 v-app 外部 -->
+  <TitleBar 
+    @toggle-sidebar="toggleSidebar"
+    @toggle-right-panel="toggleRightPanel"
+  />
+  
   <v-app>
-    <!-- 自定义标题栏 -->
-    <TitleBar 
-      @toggle-sidebar="toggleSidebar"
-      @toggle-right-panel="toggleRightPanel"
-    />
-    
     <!-- 左侧导航栏 -->
     <Sidebar 
       v-model="sidebarVisible"
@@ -61,6 +61,16 @@ html, body {
 
 #app {
   height: 100%;
+}
+
+/* 侧边栏从标题栏下方开始 */
+.v-navigation-drawer {
+  top: 40px !important;
+  height: calc(100% - 40px) !important;
+}
+
+.v-application {
+  padding-top: 40px;
 }
 
 .main-content {

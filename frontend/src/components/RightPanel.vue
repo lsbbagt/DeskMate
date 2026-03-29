@@ -79,11 +79,6 @@ const openBookmark = (bookmark: Bookmark) => {
 const openInExternal = (url: string) => {
   BrowserOpenURL(url)
 }
-
-const toggleOpenMode = async (bookmark: Bookmark) => {
-  const newMode = bookmark.openMode === 'internal' ? 'external' : 'internal'
-  await bookmarksStore.updateBookmark(bookmark.id, { openMode: newMode })
-}
 </script>
 
 <template>
@@ -148,16 +143,6 @@ const toggleOpenMode = async (bookmark: Bookmark) => {
         <v-list-item-subtitle class="text-caption">{{ bookmark.url }}</v-list-item-subtitle>
 
         <template #append>
-          <v-btn
-            icon
-            size="x-small"
-            variant="text"
-            color="secondary"
-            @click.stop="toggleOpenMode(bookmark)"
-            class="mr-1"
-          >
-            <v-icon size="14">mdi-swap-horizontal</v-icon>
-          </v-btn>
           <v-btn
             icon
             size="x-small"
