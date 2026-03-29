@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { LoadBookmarks, SaveBookmarks } from '../../wailsjs/go/main/App'
 
 export interface Bookmark {
   id: string
   name: string
   url: string
+  openMode: 'internal' | 'external' // 内部打开还是外部浏览器
   createdAt: number
 }
 
@@ -22,6 +23,14 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
     }
     bookmarks.value.push(newBookmark)
     await saveToStorage()
+  }
+
+  const updateBookmark = async (id: string, updates: Partial<Bookmark>) => {
+    const index = bookmarks.value.findIndex(b => b.id === id)
+    if (index !== -1) {
+      bookmarks.value[index] = { ...bookmarks.value[index], ...updates }
+      await saveToStorage()
+    }
   }
 
   const deleteBookmark = async (id: string) => {
@@ -64,6 +73,7 @@ export const useBookmarksStore = defineStore('bookmarks', () => {
     bookmarks,
     currentUrl,
     addBookmark,
+    updateBookmark,
     deleteBookmark,
     setCurrentUrl,
     saveToStorage,
