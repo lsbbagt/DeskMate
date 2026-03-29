@@ -3,6 +3,10 @@ import { ref, onMounted } from 'vue'
 import { useCodeTemplatesStore } from '../stores/codeTemplates'
 import type { CodeFile } from '../stores/codeTemplates'
 
+const props = defineProps<{
+  rightPanelVisible: boolean
+}>()
+
 const codeStore = useCodeTemplatesStore()
 
 const showAddFolderDialog = ref(false)
@@ -113,9 +117,9 @@ const getLanguage = (type: string) => {
 
 <template>
   <div class="code-template-view">
-    <v-row no-gutters class="fill-height">
+    <div class="main-container">
       <!-- 中间：代码展示区域 -->
-      <v-col class="d-flex flex-column code-display-area">
+      <div class="code-display-area">
         <v-card flat class="fill-height">
           <!-- 顶部工具栏 -->
           <v-card-title class="d-flex align-center justify-space-between py-2 px-4">
@@ -137,28 +141,22 @@ const getLanguage = (type: string) => {
           <v-divider />
 
           <!-- 代码内容 -->
-          <v-card-text class="code-content pa-0">
+          <div class="code-content">
             <pre v-if="codeStore.currentFileContent" class="code-block">{{ codeStore.currentFileContent }}</pre>
-            <div v-else class="empty-state text-center pa-8">
+            <div v-else class="empty-state text-center">
               <v-icon size="64" color="secondary">mdi-code-tags</v-icon>
               <div class="text-h6 mt-4 mb-2">暂无代码</div>
               <div class="text-body-2 text-secondary">
                 从右侧选择文件查看代码内容
               </div>
             </div>
-          </v-card-text>
+          </div>
         </v-card>
       </v-col>
 
       <!-- 右侧：文件夹和文件列表 -->
-      <v-col cols="auto">
-        <v-navigation-drawer
-          width="320"
-          location="right"
-          class="code-sidebar"
-          :permanent="true"
-          color="surface"
-        >
+      <div v-if="rightPanelVisible" class="code-sidebar">
+        <div class="sidebar-content">
           <!-- 标题和操作 -->
           <v-card flat class="pa-3">
             <div class="d-flex align-center justify-space-between">
@@ -178,7 +176,7 @@ const getLanguage = (type: string) => {
           <v-divider />
 
           <!-- 文件夹列表 -->
-          <v-list density="compact" class="py-0">
+          <v-list density="compact" class="py-0 code-list">
             <template v-for="folder in codeStore.folders" :key="folder.id">
               <v-list-group>
                 <template #activator="{ props }">
@@ -187,7 +185,7 @@ const getLanguage = (type: string) => {
                     :prepend-icon="'mdi-folder'"
                     class="folder-item"
                   >
-                    <v-list-item-title>{{ folder.name }}</v-list-item-title>
+                    <v-list-item-title class="text-truncate">{{ folder.name }}</v-list-item-title>
                     <template #append>
                       <v-btn
                         icon
@@ -195,7 +193,6 @@ const getLanguage = (type: string) => {
                         variant="text"
                         color="error"
                         @click.stop="confirmDeleteFolder(folder.id)"
-                        class="mr-1"
                       >
                         <v-icon size="16">mdi-delete</v-icon>
                       </v-btn>
@@ -212,7 +209,7 @@ const getLanguage = (type: string) => {
                   class="file-item"
                   rounded="lg"
                 >
-                  <v-list-item-title>{{ file.name }}</v-list-item-title>
+                  <v-list-item-title class="text-truncate">{{ file.name }}</v-list-item-title>
                   <template #append>
                     <v-btn
                       icon
@@ -220,7 +217,6 @@ const getLanguage = (type: string) => {
                       variant="text"
                       color="primary"
                       @click.stop="openWithDefault(file.path)"
-                      class="mr-1"
                     >
                       <v-icon size="14">mdi-launch</v-icon>
                     </v-btn>
@@ -231,7 +227,7 @@ const getLanguage = (type: string) => {
                       color="error"
                       @click.stop="confirmDeleteFile(folder.id, file.id)"
                     >
-                      <v-icon size="16">mdi-close</v-icon>
+                      <v-icon size="14">mdi-close</v-icon>
                     </v-btn>
                   </template>
                 </v-list-item>
@@ -239,7 +235,7 @@ const getLanguage = (type: string) => {
                 <!-- 导入文件按钮 -->
                 <v-list-item @click="importFile(folder.id)" class="import-item">
                   <v-list-item-title class="text-center text-primary">
-                    <v-icon start>mdi-plus</v-icon>
+                    <v-icon start size="16">mdi-plus</v-icon>
                     导入文件
                   </v-list-item-title>
                 </v-list-item>
@@ -254,9 +250,9 @@ const getLanguage = (type: string) => {
               暂无文件夹<br>点击右上角创建
             </div>
           </v-card>
-        </v-navigation-drawer>
-      </v-col>
-    </v-row>
+        </div>
+      </div>
+    </div>
 
     <!-- 添加文件夹对话框 -->
     <v-dialog v-model="showAddFolderDialog" max-width="400">
@@ -316,30 +312,66 @@ const getLanguage = (type: string) => {
   overflow: hidden;
 }
 
-.code-display-area {
+.main-container {
+  display: flex;
   height: 100%;
+  width: 100%;
+}
+
+.code-display-area {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+  transition: all 0.3s;
+}
+
+.code-display-area > .v-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .code-sidebar {
+  width: 320px;
+  min-width: 320px;
   border-left: 1px solid rgb(var(--v-theme-border));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(var(--v-theme-surface));
+}
+
+.sidebar-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .code-content {
   height: calc(100% - 60px);
   overflow-y: auto;
-  background-color: rgb(var(--v-theme-surface-variant));
+  background-color: #f5f5f5;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .code-block {
-  margin: 0;
+  margin: 16px;
   padding: 16px;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 13px;
-  line-height: 1.5;
-  background-color: #1e1e1e;
-  color: #d4d4d4;
+  line-height: 1.6;
+  background-color: #ffffff;
+  color: #333333;
   white-space: pre;
   overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  flex: 1;
 }
 
 .empty-state {
@@ -347,21 +379,103 @@ const getLanguage = (type: string) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
+  width: 100%;
+  background-color: #f5f5f5;
 }
 
+/* 列表整体优化 */
+.code-list {
+  padding-right: 8px;
+}
+
+/* 移除list-group的默认缩进 */
+.code-list :deep(.v-list-group__items) {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.code-list :deep(.v-list-group__items .v-list-item) {
+  padding-left: 8px !important;
+}
+
+/* 文件夹项 */
 .folder-item {
-  margin: 4px 8px;
+  margin: 2px 0;
+  padding: 0 8px;
 }
 
+.folder-item :deep(.v-list-item__prepend) {
+  margin-right: 0 !important;
+}
+
+.folder-item :deep(.v-list-item__spacer) {
+  width: 8px !important;
+  min-width: 8px !important;
+}
+
+.folder-item :deep(.v-icon) {
+  font-size: 18px;
+}
+
+.folder-item :deep(.v-list-item__append) {
+  margin-left: 4px;
+}
+
+.folder-item :deep(.v-list-item__append .v-btn) {
+  margin-left: 0;
+}
+
+/* 文件项 */
 .file-item {
-  margin: 2px 8px 2px 24px;
-  padding-left: 8px;
+  margin: 1px 0;
+  padding: 0 8px !important;
 }
 
+.file-item :deep(.v-list-item__prepend) {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+  padding-left: 16px !important;
+}
+
+.file-item :deep(.v-list-item__spacer) {
+  width: 8px !important;
+  min-width: 8px !important;
+}
+
+.file-item :deep(.v-icon) {
+  font-size: 16px;
+}
+
+.file-item :deep(.v-list-item__append) {
+  margin-left: 4px;
+}
+
+.file-item :deep(.v-list-item__append .v-btn + .v-btn) {
+  margin-left: 2px;
+}
+
+/* 文件名截断 */
+.file-item :deep(.v-list-item__content),
+.folder-item :deep(.v-list-item__content) {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 导入文件按钮 */
 .import-item {
-  margin: 4px 8px 4px 24px;
-  padding-left: 8px;
+  margin: 2px 0;
+  padding: 0 8px !important;
   border: 1px dashed rgb(var(--v-theme-border));
+}
+
+.import-item :deep(.v-list-item__content) {
+  padding-left: 16px;
 }
 </style>

@@ -47,7 +47,7 @@ const toggleRightPanel = () => {
 
       <!-- 代码模板模块 -->
       <v-container v-else-if="activeModule === 'codeTemplates'" fluid class="fill-height pa-0">
-        <CodeTemplateView />
+        <CodeTemplateView :right-panel-visible="rightPanelVisible" />
       </v-container>
     </v-main>
   </v-app>

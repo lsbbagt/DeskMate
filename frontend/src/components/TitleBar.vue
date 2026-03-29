@@ -38,15 +38,15 @@ const close = () => {
       </button>
 
       <!-- 窗口控制按钮 -->
-      <button class="title-btn window-btn" @click="minimize">
+      <button class="title-btn window-btn" @click.stop.prevent="minimize">
         <v-icon size="18">mdi-minus</v-icon>
       </button>
 
-      <button class="title-btn window-btn" @click="maximize">
+      <button class="title-btn window-btn" @click.stop.prevent="maximize">
         <v-icon size="18">mdi-checkbox-blank-outline</v-icon>
       </button>
 
-      <button class="title-btn window-btn close-btn" @click="close">
+      <button class="title-btn window-btn close-btn" @click.stop.prevent="close">
         <v-icon size="18">mdi-close</v-icon>
       </button>
     </div>
@@ -100,10 +100,16 @@ const close = () => {
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s;
+  position: relative;
+  z-index: 10;
 }
 
 .title-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.title-btn:active {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .window-btn {
