@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar.vue'
 import RightPanel from './components/RightPanel.vue'
 import TodoView from './views/TodoView.vue'
 import CodeTemplateView from './views/CodeTemplateView.vue'
+import MarkdownEditorView from './views/MarkdownEditorView.vue'
 
 const sidebarVisible = ref(true)
 const rightPanelVisible = ref(true)
@@ -48,6 +49,11 @@ const toggleRightPanel = () => {
       <!-- 代码模板模块 -->
       <v-container v-else-if="activeModule === 'codeTemplates'" fluid class="fill-height pa-0">
         <CodeTemplateView :right-panel-visible="rightPanelVisible" />
+      </v-container>
+
+      <!-- Markdown 编辑器模块 -->
+      <v-container v-else-if="activeModule === 'markdownEditor'" fluid class="fill-height pa-0">
+        <MarkdownEditorView :right-panel-visible="rightPanelVisible" />
       </v-container>
     </v-main>
   </v-app>

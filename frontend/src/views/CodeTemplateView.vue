@@ -152,7 +152,7 @@ const getLanguage = (type: string) => {
             </div>
           </div>
         </v-card>
-      </v-col>
+      </div>
 
       <!-- 右侧：文件夹和文件列表 -->
       <div v-if="rightPanelVisible" class="code-sidebar">
@@ -309,7 +309,10 @@ const getLanguage = (type: string) => {
 <style scoped>
 .code-template-view {
   height: 100%;
+  width: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-container {
@@ -321,11 +324,14 @@ const getLanguage = (type: string) => {
 .code-display-area {
   flex: 1;
   height: 100%;
+  width: 100%;
   min-width: 0;
   transition: all 0.3s;
+  display: flex;
 }
 
 .code-display-area > .v-card {
+  flex: 1;
   width: 100%;
   height: 100%;
   display: flex;

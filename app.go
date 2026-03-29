@@ -36,18 +36,35 @@ type CodeFolder struct {
 	Files []CodeFile `json:"files"`
 }
 
+// MarkdownFile structure
+type MarkdownFile struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Path    string `json:"path"`
+	Content string `json:"content"`
+}
+
+// MarkdownFolder structure
+type MarkdownFolder struct {
+	ID    string         `json:"id"`
+	Name  string         `json:"name"`
+	Files []MarkdownFile `json:"files"`
+}
+
 // App struct
 type App struct {
-	ctx          context.Context
-	todos        []Todo
-	codeFolders  []CodeFolder
+	ctx            context.Context
+	todos          []Todo
+	codeFolders    []CodeFolder
+	markdownFolders []MarkdownFolder
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{
-		todos:       make([]Todo, 0),
-		codeFolders: make([]CodeFolder, 0),
+		todos:           make([]Todo, 0),
+		codeFolders:     make([]CodeFolder, 0),
+		markdownFolders: make([]MarkdownFolder, 0),
 	}
 }
 
@@ -57,6 +74,7 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.loadTodosFromFile()
 	a.loadCodeTemplatesFromFile()
+	a.loadMarkdownFilesFromFile()
 }
 
 // GetConfigDir returns the config directory path
@@ -224,4 +242,59 @@ func (a *App) loadCodeTemplatesFromFile() error {
 	}
 
 	return json.Unmarshal(data, &a.codeFolders)
+}
+
+// Markdown File APIs
+
+// SaveMarkdownFiles saves markdown files to file
+func (a *App) SaveMarkdownFiles(jsonData string) error {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "markdownFiles.json")
+	return os.WriteFile(filePath, []byte(jsonData), 0644)
+}
+
+// LoadMarkdownFiles loads markdown files from file
+func (a *App) LoadMarkdownFiles() (string, error) {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "markdownFiles.json")
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// Return empty array if file doesn't exist
+		return "[]", nil
+	}
+
+	return string(data), nil
+}
+
+// SaveMarkdownContent saves markdown content to a file
+func (a *App) SaveMarkdownContent(filePath string, content string) error {
+	return os.WriteFile(filePath, []byte(content), 0644)
+}
+
+// SelectMarkdownFile opens file dialog for selecting markdown files
+func (a *App) SelectMarkdownFile() (string, error) {
+	filePath, err := wailsRuntime.OpenFileDialog(a.ctx, wailsRuntime.OpenDialogOptions{
+		Title: "选择 Markdown 文件",
+		Filters: []wailsRuntime.FileFilter{
+			{DisplayName: "Markdown 文件", Pattern: "*.md;*.markdown"},
+			{DisplayName: "所有文件", Pattern: "*.*"},
+		},
+	})
+	return filePath, err
+}
+
+// loadMarkdownFilesFromFile loads markdown files from file
+func (a *App) loadMarkdownFilesFromFile() error {
+	configDir := a.GetConfigDir()
+	filePath := filepath.Join(configDir, "markdownFiles.json")
+
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// File doesn't exist, initialize empty
+		a.markdownFolders = make([]MarkdownFolder, 0)
+		return nil
+	}
+
+	return json.Unmarshal(data, &a.markdownFolders)
 }

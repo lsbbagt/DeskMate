@@ -30,6 +30,10 @@ export function LoadCodeTemplates() {
   return window['go']['main']['App']['LoadCodeTemplates']();
 }
 
+export function LoadMarkdownFiles() {
+  return window['go']['main']['App']['LoadMarkdownFiles']();
+}
+
 export function OpenWithDefaultApp(arg1) {
   return window['go']['main']['App']['OpenWithDefaultApp'](arg1);
 }
@@ -46,6 +50,18 @@ export function SaveCodeTemplates(arg1) {
   return window['go']['main']['App']['SaveCodeTemplates'](arg1);
 }
 
+export function SaveMarkdownContent(arg1, arg2) {
+  return window['go']['main']['App']['SaveMarkdownContent'](arg1, arg2);
+}
+
+export function SaveMarkdownFiles(arg1) {
+  return window['go']['main']['App']['SaveMarkdownFiles'](arg1);
+}
+
 export function SelectCodeFile() {
   return window['go']['main']['App']['SelectCodeFile']();
+}
+
+export function SelectMarkdownFile() {
+  return window['go']['main']['App']['SelectMarkdownFile']();
 }

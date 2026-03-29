@@ -6,10 +6,10 @@
 
 ## 📊 项目状态
 
-**当前阶段：** 代码模板模块优化完成  
-**项目类型：** 桌面应用（Wails + Vuetify3）  
-**创建日期：** 2026-03-29  
-**最后更新：** 2026-03-29 15:08
+**当前阶段：** Markdown 编辑器模块优化完成（预览区折叠功能）
+**项目类型：** 桌面应用（Wails + Vuetify3）
+**创建日期：** 2026-03-29
+**最后更新：** 2026-03-29 15:36
 
 ---
 
@@ -112,9 +112,41 @@
 - 删除操作需要确认，防止误操作
 - exe文件使用默认应用打开即可运行
 
-### 模块4：Markdown快速笔记
-**优先级：** 中  
-**状态：** 📋 待开发
+### 模块4：Markdown 编辑器
+**优先级：** 高  
+**状态：** ✅ 已完成
+
+#### 已实现功能
+- ✅ 创建文件夹和 Markdown 文件
+- ✅ 导入现有 Markdown 文件
+- ✅ 实时编辑和预览（左右分栏）
+- ✅ 预览区折叠功能（专注编辑模式）
+- ✅ 数学公式渲染（KaTeX）
+  - 行内公式：`$...$`
+  - 块级公式：`$$...$$`
+- ✅ 代码高亮（highlight.js）
+- ✅ 列表缩进支持
+- ✅ 自动保存（1秒防抖）
+- ✅ 删除文件和文件夹（带确认）
+- ✅ 数据持久化（~/.statbox-v2/markdownFiles.json）
+- ✅ 右侧文件管理面板
+
+#### 支持的 Markdown 特性
+- 标题（H1-H6）
+- 段落和换行
+- 有序/无序列表（支持缩进）
+- 代码块和语法高亮
+- 表格
+- 引用块
+- 链接和图片
+- 水平分隔线
+- 数学公式（行内和块级）
+
+#### 技术实现
+- **渲染引擎：** markdown-it
+- **数学公式：** KaTeX
+- **代码高亮：** highlight.js
+- **编辑器：** 原生 textarea（后续可升级为 Monaco Editor）
 
 ### 模块5：快速格式转化
 **优先级：** 中  
@@ -139,13 +171,17 @@ statbox-v2/
 │   │   ├── Sidebar.vue         ✅ 左侧导航（待办/代码模板）
 │   │   └── RightPanel.vue      ✅ 右侧收藏列表
 │   ├── views/
-│   │   ├── BookmarksView.vue   ✅ 浏览器视图（已弃用）
-│   │   ├── TodoView.vue        ✅ 待办事项视图
-│   │   └── CodeTemplateView.vue ✅ 代码模板视图
-│   └── stores/
-│       ├── bookmarks.ts        ✅ 收藏夹状态管理
-│       ├── todos.ts            ✅ 待办事项状态管理
-│       └── codeTemplates.ts    ✅ 代码模板状态管理
+│   │   ├── BookmarksView.vue        ✅ 浏览器视图（已弃用）
+│   │   ├── TodoView.vue             ✅ 待办事项视图
+│   │   ├── CodeTemplateView.vue     ✅ 代码模板视图
+│   │   └── MarkdownEditorView.vue   ✅ Markdown 编辑器视图
+│   ├── stores/
+│   │   ├── bookmarks.ts             ✅ 收藏夹状态管理
+│   │   ├── todos.ts                 ✅ 待办事项状态管理
+│   │   ├── codeTemplates.ts         ✅ 代码模板状态管理
+│   │   └── markdownFiles.ts         ✅ Markdown 文件状态管理
+│   └── utils/
+│       └── markdownRenderer.ts      ✅ Markdown 渲染工具（公式+高亮）
 ├── main.go                     ✅ 应用入口（无边框窗口）
 ├── app.go                      ✅ 应用逻辑（收藏夹+待办）
 └── wails.json                  ✅ 配置文件
@@ -186,12 +222,19 @@ statbox-v2/
 20. ✅ 实现代码文件导入和展示功能
 21. ✅ 实现文件夹管理和文件删除确认
 22. ✅ 添加左侧导航模块切换功能
+23. ✅ 修复代码模板布局问题（标签闭合错误）
+24. ✅ 创建 Markdown 编辑器模块（后端API + store + 视图）
+25. ✅ 实现数学公式渲染（KaTeX 支持 $ 和 $$）
+26. ✅ 实现代码语法高亮（highlight.js）
+27. ✅ 实现自动保存功能（1秒防抖）
+28. ✅ 实现列表缩进支持
+29. ✅ 实现预览区折叠功能（专注编辑模式）
 
 ---
 
 ## 🔄 当前进行中的任务
 
-- ✅ 代码模板模块优化完成
+- ✅ Markdown 编辑器模块开发完成
 
 ---
 
@@ -208,8 +251,11 @@ statbox-v2/
 | 收藏夹Store | `frontend/src/stores/bookmarks.ts` | 收藏夹状态 |
 | 待办Store | `frontend/src/stores/todos.ts` | 待办状态 |
 | 代码模板Store | `frontend/src/stores/codeTemplates.ts` | 代码模板状态 |
+| Markdown Store | `frontend/src/stores/markdownFiles.ts` | Markdown 文件状态 |
+| Markdown渲染器 | `frontend/src/utils/markdownRenderer.ts` | Markdown 渲染工具 |
 | 待办视图 | `frontend/src/views/TodoView.vue` | 待办事项视图 |
 | 代码模板视图 | `frontend/src/views/CodeTemplateView.vue` | 代码模板视图 |
+| Markdown视图 | `frontend/src/views/MarkdownEditorView.vue` | Markdown 编辑器视图 |
 
 ---
 
@@ -227,8 +273,10 @@ statbox-v2/
 - [x] 开发代码模板模块
 - [x] 优化代码模板界面布局
 - [x] 实现右侧栏折叠功能
+- [x] 开发 Markdown 编辑器模块
+- [x] 实现数学公式渲染
+- [x] 实现代码语法高亮
 - [ ] 测试核心功能
-- [ ] 开发Markdown笔记模块
 - [ ] 开发格式转化模块
 - [ ] 开发系统设置模块
 
@@ -271,6 +319,13 @@ statbox-v2/
    - 文件图标添加padding-left区分层级
    - 移除Vuetify默认缩进，手动控制间距
 
+8. **Markdown 编辑器设计：**
+   - 左右分栏：编辑器 | 预览区 | 文件管理
+   - 数学公式使用 KaTeX 渲染
+   - 代码高亮使用 highlight.js
+   - 自动保存使用防抖（1秒延迟）
+   - 支持列表缩进（padding-left: 2em）
+
 ---
 
 ## 🐛 已解决的问题
@@ -299,6 +354,22 @@ statbox-v2/
 ---
 
 ## 📅 更新日志
+
+### 2026-03-29 v0.5.1
+- ✅ Markdown 编辑器优化：预览区折叠功能
+- ✅ 支持专注编辑模式（隐藏预览区）
+- ✅ 折叠按钮界面优化
+
+### 2026-03-29 v0.5
+- ✅ 新增 Markdown 编辑器模块
+- ✅ 实时编辑和预览（左右分栏）
+- ✅ 数学公式渲染（KaTeX，支持 $ 和 $$）
+- ✅ 代码语法高亮（highlight.js）
+- ✅ 列表缩进支持
+- ✅ 自动保存功能（1秒防抖）
+- ✅ 创建文件夹和文件
+- ✅ 导入 Markdown 文件
+- ✅ 删除文件和文件夹
 
 ### 2026-03-29 v0.4.1
 - ✅ 优化代码模板界面布局
@@ -339,5 +410,5 @@ statbox-v2/
 
 ---
 
-**文档版本：** 1.6  
-**最后更新：** 2026-03-29 15:08
+**文档版本：** 1.8
+**最后更新：** 2026-03-29 15:36

@@ -16,6 +16,8 @@ export function LoadBookmarks():Promise<string>;
 
 export function LoadCodeTemplates():Promise<string>;
 
+export function LoadMarkdownFiles():Promise<string>;
+
 export function OpenWithDefaultApp(arg1:string):Promise<void>;
 
 export function ReadFileContent(arg1:string):Promise<string>;
@@ -24,4 +26,10 @@ export function SaveBookmarks(arg1:string):Promise<void>;
 
 export function SaveCodeTemplates(arg1:string):Promise<void>;
 
+export function SaveMarkdownContent(arg1:string,arg2:string):Promise<void>;
+
+export function SaveMarkdownFiles(arg1:string):Promise<void>;
+
 export function SelectCodeFile():Promise<string>;
+
+export function SelectMarkdownFile():Promise<string>;
