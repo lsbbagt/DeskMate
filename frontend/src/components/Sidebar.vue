@@ -16,7 +16,8 @@ const collapsed = ref(false)
 const modules = [
   { id: 'todos', name: '待办事项', icon: 'mdi-checkbox-marked-outline' },
   { id: 'codeTemplates', name: '代码模板', icon: 'mdi-code-tags' },
-  { id: 'markdownEditor', name: 'Markdown 编辑器', icon: 'mdi-language-markdown' }
+  { id: 'markdownEditor', name: 'Markdown', icon: 'mdi-language-markdown' },
+  { id: 'settings', name: '设置', icon: 'mdi-cog' }
 ]
 
 const selectModule = (id: string) => {

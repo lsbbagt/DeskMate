@@ -87,13 +87,14 @@ const getFileIcon = (type: string) => {
     py: 'mdi-language-python',
     r: 'mdi-language-r',
     R: 'mdi-language-r',
-    js: 'mdi-language-javascript',
-    ts: 'mdi-language-typescript',
-    java: 'mdi-language-java',
+    jl: 'mdi-language-julia',
+    julia: 'mdi-language-julia',
     cpp: 'mdi-language-cpp',
     c: 'mdi-language-c',
     go: 'mdi-language-go',
-    exe: 'mdi-application'
+    html: 'mdi-language-html5',
+    m: 'mdi-language-matlab',
+    txt: 'mdi-file-document-outline'
   }
   return iconMap[type] || 'mdi-file-document'
 }
@@ -104,12 +105,14 @@ const getLanguage = (type: string) => {
     py: 'Python',
     r: 'R',
     R: 'R',
-    js: 'JavaScript',
-    ts: 'TypeScript',
-    java: 'Java',
+    jl: 'Julia',
+    julia: 'Julia',
     cpp: 'C++',
     c: 'C',
-    go: 'Go'
+    go: 'Go',
+    html: 'HTML',
+    m: 'MATLAB',
+    txt: 'Text'
   }
   return langMap[type] || 'Text'
 }

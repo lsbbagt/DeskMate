@@ -3,7 +3,7 @@ import katex from 'katex'
 import hljs from 'highlight.js'
 
 // 创建 Markdown-it 实例
-const md = new MarkdownIt({
+const md: MarkdownIt = new MarkdownIt({
   html: true,
   linkify: true,
   typographer: true,
@@ -14,7 +14,9 @@ const md = new MarkdownIt({
         return `<pre class="hljs"><code>${hljs.highlight(str, { language: lang, ignoreIllegals: true }).value}</code></pre>`
       } catch (__) {}
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+    // 手动转义 HTML
+    const escaped = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    return `<pre class="hljs"><code>${escaped}</code></pre>`
   }
 })
 

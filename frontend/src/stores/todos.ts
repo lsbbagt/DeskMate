@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { AddTodo, GetTodos, DeleteTodo } from '../../wailsjs/go/main/App'
+import { AddTodo, GetTodos, DeleteTodo, UpdateTodo } from '../../wailsjs/go/main/App'
 
 export interface Todo {
   id: string
@@ -54,6 +54,21 @@ export const useTodosStore = defineStore('todos', () => {
     }
   }
 
+  const updateTodo = async (id: string, updates: Partial<Todo>) => {
+    const todo = todos.value.find(t => t.id === id)
+    if (todo) {
+      const updatedTodo = { ...todo, ...updates }
+      
+      try {
+        await UpdateTodo(updatedTodo)
+        // 更新本地状态
+        Object.assign(todo, updates)
+      } catch (error) {
+        console.error('更新待办失败:', error)
+      }
+    }
+  }
+
   const completeTodo = async (id: string) => {
     const todo = todos.value.find(t => t.id === id)
     if (todo) {
@@ -67,6 +82,7 @@ export const useTodosStore = defineStore('todos', () => {
     loadTodos,
     addTodo,
     deleteTodo,
+    updateTodo,
     completeTodo
   }
 })

@@ -5,9 +5,11 @@ import { useTodosStore } from '../stores/todos'
 const todosStore = useTodosStore()
 
 const showAddDialog = ref(false)
+const showEditDialog = ref(false)
 const newTodoName = ref('')
 const newTodoDescription = ref('')
 const newTodoDeadline = ref('')
+const editingTodo = ref<any>(null)
 
 onMounted(() => {
   todosStore.loadTodos()
@@ -28,6 +30,23 @@ const addTodo = async () => {
       deadline: newTodoDeadline.value
     })
     showAddDialog.value = false
+  }
+}
+
+const openEditDialog = (todo: any) => {
+  editingTodo.value = { ...todo }
+  showEditDialog.value = true
+}
+
+const saveEdit = async () => {
+  if (editingTodo.value) {
+    await todosStore.updateTodo(editingTodo.value.id, {
+      name: editingTodo.value.name,
+      description: editingTodo.value.description,
+      deadline: editingTodo.value.deadline
+    })
+    showEditDialog.value = false
+    editingTodo.value = null
   }
 }
 
@@ -83,6 +102,15 @@ const formatDate = (dateStr: string) => {
 
           <v-card-actions>
             <v-spacer />
+            <v-btn
+              color="primary"
+              variant="text"
+              size="small"
+              @click="openEditDialog(todo)"
+            >
+              <v-icon start>mdi-pencil</v-icon>
+              编辑
+            </v-btn>
             <v-btn
               color="success"
               variant="flat"
@@ -152,6 +180,57 @@ const formatDate = (dateStr: string) => {
             :disabled="!newTodoName"
           >
             添加
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- 编辑对话框 -->
+    <v-dialog v-model="showEditDialog" max-width="500">
+      <v-card>
+        <v-card-title class="text-h6">
+          编辑待办
+        </v-card-title>
+        <v-card-text v-if="editingTodo">
+          <v-text-field
+            v-model="editingTodo.name"
+            label="待办名称"
+            variant="outlined"
+            density="compact"
+            class="mb-3"
+            hide-details
+            required
+          />
+          <v-textarea
+            v-model="editingTodo.description"
+            label="描述（可选）"
+            variant="outlined"
+            density="compact"
+            rows="3"
+            class="mb-3"
+            hide-details
+          />
+          <v-text-field
+            v-model="editingTodo.deadline"
+            label="截止日期"
+            variant="outlined"
+            density="compact"
+            type="date"
+            hide-details
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn variant="text" @click="showEditDialog = false">
+            取消
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            @click="saveEdit"
+            :disabled="!editingTodo?.name"
+          >
+            保存
           </v-btn>
         </v-card-actions>
       </v-card>

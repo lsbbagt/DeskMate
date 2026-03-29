@@ -6,6 +6,26 @@ export function AddTodo(arg1) {
   return window['go']['main']['App']['AddTodo'](arg1);
 }
 
+export function CreateMarkdownFile(arg1, arg2) {
+  return window['go']['main']['App']['CreateMarkdownFile'](arg1, arg2);
+}
+
+export function DeleteCodeFile(arg1) {
+  return window['go']['main']['App']['DeleteCodeFile'](arg1);
+}
+
+export function DeleteCodeFolder(arg1) {
+  return window['go']['main']['App']['DeleteCodeFolder'](arg1);
+}
+
+export function DeleteMarkdownFile(arg1) {
+  return window['go']['main']['App']['DeleteMarkdownFile'](arg1);
+}
+
+export function DeleteMarkdownFolder(arg1) {
+  return window['go']['main']['App']['DeleteMarkdownFolder'](arg1);
+}
+
 export function DeleteTodo(arg1) {
   return window['go']['main']['App']['DeleteTodo'](arg1);
 }
@@ -22,6 +42,14 @@ export function GetTodos() {
   return window['go']['main']['App']['GetTodos']();
 }
 
+export function ImportCodeFile(arg1, arg2) {
+  return window['go']['main']['App']['ImportCodeFile'](arg1, arg2);
+}
+
+export function ImportMarkdownFile(arg1, arg2) {
+  return window['go']['main']['App']['ImportMarkdownFile'](arg1, arg2);
+}
+
 export function LoadBookmarks() {
   return window['go']['main']['App']['LoadBookmarks']();
 }
@@ -32,6 +60,10 @@ export function LoadCodeTemplates() {
 
 export function LoadMarkdownFiles() {
   return window['go']['main']['App']['LoadMarkdownFiles']();
+}
+
+export function OpenDataFolder() {
+  return window['go']['main']['App']['OpenDataFolder']();
 }
 
 export function OpenWithDefaultApp(arg1) {
@@ -64,4 +96,16 @@ export function SelectCodeFile() {
 
 export function SelectMarkdownFile() {
   return window['go']['main']['App']['SelectMarkdownFile']();
+}
+
+export function SyncCodeTemplates() {
+  return window['go']['main']['App']['SyncCodeTemplates']();
+}
+
+export function SyncMarkdownFiles() {
+  return window['go']['main']['App']['SyncMarkdownFiles']();
+}
+
+export function UpdateTodo(arg1) {
+  return window['go']['main']['App']['UpdateTodo'](arg1);
 }

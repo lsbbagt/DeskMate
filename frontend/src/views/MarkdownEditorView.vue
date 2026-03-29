@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useMarkdownFilesStore } from '../stores/markdownFiles'
 import type { MarkdownFile } from '../stores/markdownFiles'
 import { renderMarkdown } from '../utils/markdownRenderer'
@@ -27,9 +27,30 @@ const previewContent = computed(() => {
   return renderMarkdown(editorContent.value)
 })
 
+// 保存反馈状态
+const saveFeedback = ref(false)
+
 onMounted(() => {
   markdownStore.loadMarkdownFiles()
+  // 添加 Ctrl+S 快捷键监听
+  window.addEventListener('keydown', handleKeyDown)
 })
+
+onUnmounted(() => {
+  // 移除快捷键监听
+  window.removeEventListener('keydown', handleKeyDown)
+})
+
+// 键盘事件处理
+const handleKeyDown = (e: KeyboardEvent) => {
+  // Ctrl+S 或 Cmd+S (Mac)
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault()
+    if (markdownStore.currentFileName) {
+      manualSave()
+    }
+  }
+}
 
 // 监听当前文件变化，更新编辑器内容
 watch(() => markdownStore.currentFileContent, (newContent) => {
@@ -46,6 +67,19 @@ watch(editorContent, (newContent) => {
     }
   }, 1000)
 })
+
+// 手动保存
+const manualSave = async () => {
+  if (!markdownStore.currentFileName) return
+  
+  await markdownStore.saveFile(editorContent.value)
+  
+  // 显示保存反馈
+  saveFeedback.value = true
+  setTimeout(() => {
+    saveFeedback.value = false
+  }, 2000)
+}
 
 // 添加文件夹
 const newFolderName = ref('')
@@ -120,16 +154,26 @@ const openFile = async (file: MarkdownFile) => {
             <div class="text-subtitle-1">
               {{ markdownStore.currentFileName || '新建文档' }}
             </div>
-            <v-btn
-              v-if="markdownStore.currentFileName"
-              color="primary"
-              prepend-icon="mdi-content-save"
-              size="small"
-              variant="flat"
-              @click="markdownStore.saveFile(editorContent)"
-            >
-              保存
-            </v-btn>
+            <div class="d-flex align-center">
+              <!-- 保存反馈 -->
+              <v-fade-transition>
+                <div v-if="saveFeedback" class="save-feedback mr-2">
+                  <v-icon color="success" size="16">mdi-check-circle</v-icon>
+                  <span class="text-success text-body-2 ml-1">已保存</span>
+                </div>
+              </v-fade-transition>
+              
+              <v-btn
+                v-if="markdownStore.currentFileName"
+                color="primary"
+                prepend-icon="mdi-content-save"
+                size="small"
+                variant="flat"
+                @click="manualSave"
+              >
+                保存
+              </v-btn>
+            </div>
           </v-card-title>
 
           <v-divider />
@@ -613,5 +657,11 @@ const openFile = async (file: MarkdownFile) => {
 .action-item {
   border: 1px dashed rgb(var(--v-theme-border));
   margin: 2px 8px;
+}
+
+/* 保存反馈动画 */
+.save-feedback {
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -8,7 +8,7 @@
 # Test binary, built with `go test -c`
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Output of the go coverage tool
 *.out
 
 # Dependency directories
@@ -20,11 +20,10 @@ go.work
 # Build directory
 build/bin/
 
-# Frontend dependencies
-frontend/node_modules/
-
-# Frontend build output
+# Frontend build artifacts
 frontend/dist/
+frontend/node_modules/
+frontend/.vite/
 
 # IDE
 .idea/
@@ -37,10 +36,9 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Log files
 *.log
-logs/
 
 # Temporary files
-*.tmp
-*.temp
+tmp/
+temp/

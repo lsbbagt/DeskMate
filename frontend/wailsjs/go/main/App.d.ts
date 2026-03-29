@@ -4,6 +4,16 @@ import {main} from '../models';
 
 export function AddTodo(arg1:main.Todo):Promise<void>;
 
+export function CreateMarkdownFile(arg1:string,arg2:string):Promise<string>;
+
+export function DeleteCodeFile(arg1:string):Promise<void>;
+
+export function DeleteCodeFolder(arg1:string):Promise<void>;
+
+export function DeleteMarkdownFile(arg1:string):Promise<void>;
+
+export function DeleteMarkdownFolder(arg1:string):Promise<void>;
+
 export function DeleteTodo(arg1:string):Promise<void>;
 
 export function GetCodeFolders():Promise<Array<main.CodeFolder>>;
@@ -12,11 +22,17 @@ export function GetConfigDir():Promise<string>;
 
 export function GetTodos():Promise<Array<main.Todo>>;
 
+export function ImportCodeFile(arg1:string,arg2:string):Promise<string>;
+
+export function ImportMarkdownFile(arg1:string,arg2:string):Promise<string>;
+
 export function LoadBookmarks():Promise<string>;
 
 export function LoadCodeTemplates():Promise<string>;
 
 export function LoadMarkdownFiles():Promise<string>;
+
+export function OpenDataFolder():Promise<string>;
 
 export function OpenWithDefaultApp(arg1:string):Promise<void>;
 
@@ -33,3 +49,9 @@ export function SaveMarkdownFiles(arg1:string):Promise<void>;
 export function SelectCodeFile():Promise<string>;
 
 export function SelectMarkdownFile():Promise<string>;
+
+export function SyncCodeTemplates():Promise<void>;
+
+export function SyncMarkdownFiles():Promise<void>;
+
+export function UpdateTodo(arg1:main.Todo):Promise<void>;

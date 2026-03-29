@@ -28,7 +28,7 @@ const close = () => {
       </button>
 
       <!-- 标题 -->
-      <div class="title-text">StatBox</div>
+      <div class="title-text">DeskMate</div>
 
       <div class="spacer"></div>
 
