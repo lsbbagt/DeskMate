@@ -55,7 +55,7 @@ const openDataFolder = async () => {
           <template #prepend>
             <v-icon>mdi-information</v-icon>
           </template>
-          数据文件夹位于用户主目录下的 <code>.statbox-v2</code> 文件夹
+          数据文件夹位于用户主目录下的 <code>.deskmate</code> 文件夹
         </v-alert>
       </v-card-text>
     </v-card>
