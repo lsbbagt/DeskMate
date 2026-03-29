@@ -195,7 +195,7 @@ DeskMate/
 
 **lsbbagt**
 - GitHub: [@lsbbagt](https://github.com/lsbbagt)
-- Email: 1263501236@qq.com
+- Email: 2771474297@qq.com
 
 ## 🙏 致谢
 
