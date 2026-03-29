@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { WindowMinimise, WindowToggleMaximise, Quit, BrowserOpenURL } from '../../wailsjs/runtime/runtime'
+import { WindowMinimise, WindowToggleMaximise, Quit } from '../../wailsjs/runtime/runtime'
 
 const emit = defineEmits<{
   (e: 'toggle-sidebar'): void
@@ -20,110 +20,89 @@ const close = () => {
 </script>
 
 <template>
-  <div class="title-bar-wrapper">
-    <v-app-bar 
-      flat 
-      density="default"
-      height="40"
-      class="title-bar"
-      color="primary"
-    >
+  <div class="title-bar" style="--wails-draggable:drag">
+    <div class="title-bar-content">
       <!-- 左侧控制按钮 -->
-      <v-btn
-        icon
-        size="small"
-        variant="text"
-        @click="$emit('toggle-sidebar')"
-        class="control-btn"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      <button class="title-btn" @click="$emit('toggle-sidebar')">
+        <v-icon size="20">mdi-menu</v-icon>
+      </button>
 
       <!-- 标题 -->
-      <v-app-bar-title class="text-body-2 font-weight-medium title-text">
-        StatBox
-      </v-app-bar-title>
+      <div class="title-text">StatBox</div>
 
-      <v-spacer />
+      <div class="spacer"></div>
 
       <!-- 右侧控制按钮 -->
-      <v-btn
-        icon
-        size="small"
-        variant="text"
-        @click="$emit('toggle-right-panel')"
-        class="control-btn"
-      >
-        <v-icon>mdi-folder-outline</v-icon>
-      </v-btn>
+      <button class="title-btn" @click="$emit('toggle-right-panel')">
+        <v-icon size="20">mdi-folder-outline</v-icon>
+      </button>
 
       <!-- 窗口控制按钮 -->
-      <v-btn
-        icon
-        size="small"
-        variant="text"
-        @click="minimize"
-        class="window-btn"
-      >
+      <button class="title-btn window-btn" @click="minimize">
         <v-icon size="18">mdi-minus</v-icon>
-      </v-btn>
+      </button>
 
-      <v-btn
-        icon
-        size="small"
-        variant="text"
-        @click="maximize"
-        class="window-btn"
-      >
+      <button class="title-btn window-btn" @click="maximize">
         <v-icon size="18">mdi-checkbox-blank-outline</v-icon>
-      </v-btn>
+      </button>
 
-      <v-btn
-        icon
-        size="small"
-        variant="text"
-        @click="close"
-        class="window-btn close-btn"
-      >
+      <button class="title-btn window-btn close-btn" @click="close">
         <v-icon size="18">mdi-close</v-icon>
-      </v-btn>
-    </v-app-bar>
+      </button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.title-bar-wrapper {
-  -webkit-app-region: drag;
-  user-select: none;
+.title-bar {
   width: 100%;
   height: 40px;
+  background-color: rgb(var(--v-theme-primary));
+  color: white;
+  user-select: none;
+  display: flex;
+  align-items: center;
 }
 
-.title-bar {
-  -webkit-app-region: drag;
-  height: 40px !important;
-}
-
-.title-bar :deep(.v-toolbar__content) {
-  height: 40px !important;
+.title-bar-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
   padding: 0 4px;
 }
 
 .title-text {
-  -webkit-app-region: drag;
-  flex: none;
+  font-size: 14px;
+  font-weight: 500;
   margin-left: 8px;
+  white-space: nowrap;
 }
 
-.control-btn,
-.window-btn {
+.spacer {
+  flex: 1;
+}
+
+.title-btn {
   -webkit-app-region: no-drag;
-  flex-shrink: 0;
+  width: 46px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.title-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .window-btn {
-  min-width: 46px !important;
-  border-radius: 0 !important;
+  border-radius: 0;
 }
 
 .close-btn:hover {
